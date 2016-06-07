@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+        <script>
+            var socket = io('http://localhost:8080/chat');
+
+            socket.on('message', function(data) {
+                addRoomMessage(data.room, data.message)
+            });
+
+            function sendRoomMessage(room) {
+                socket.emit('message', {
+                    room: room,
+                    message: document.getElementById('room_' + room)
+                                     .getElementsByClassName('data')[0]
+                                     .value
+                });
+            }
+
+            function addRoomMessage(room, message) {
+                if (document.getElementById('room_' + room)) {
+                    document.getElementById('room_' + room)
+                            .getElementsByClassName('messages')[0]
+                            .innerHTML += message + "<br>";
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div style="float:left; border-right:1px solid #ccc; padding-right:10px; margin-right:10px;"
+             id="room_a">
+            <span>Room A</span>
+            <input type="text" class="data">
+            <input
+                type="button"
+                onclick="sendRoomMessage('a');"
+                value="Send" />
+            <div class="messages"></div>
+        </div>
+        <div style="float:left;" id="room_b">
+            <span>Room B</span>
+            <input type="text" class="data">
+            <input
+                type="button"
+                onclick="sendRoomMessage('b');"
+                value="Send" />
+            <div class="messages"></div>
+        </div>
+    </body>
+</html>
